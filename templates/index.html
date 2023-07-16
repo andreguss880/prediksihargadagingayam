@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css">
+<style>
+ .cta {
+      position: relative;
+    }
+
+    .cta button {
+      font-size: 1.5rem;
+    }
+
+    .cta button:hover {
+      animation: pulse 1s infinite;
+    }
+
+    .cta .arrow {
+      position: absolute;
+      bottom: -20px;
+      left: calc(50% - 12px);
+      animation: slide 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slide {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+</style>
+<body>
+	<div class="container-fluid p-0">
+		<section class="resume-section" id="index">
+			<div class="resume-section-content">
+			<h3 class="mb-0"><a aria-expanded="false">Halo, {{ session.username }}!</a></h3><br> 
+		<h2 class="mb-0">Selamat Datang di Prediksi Harga Daging Ayam</h2><br>
+		<div class="card card-standard">
+			<img src="{{ url_for('static', filename='ras.jpg') }}" alt="broiler" class="card-img-top">
+			<div class="card-body">
+			  <h5 class="card-title">Ayam broiler</h5>
+			</div>
+		  </div>
+		  
+		<br><br>
+		<p>Website ini menyediakan layanan prediksi harga daging ayam menggunakan metode jaringan syaraf tiruan backpropagation. Saya mengumpulkan data harga daging ayam selama beberapa bulan terakhir dan mengolahnya menggunakan algoritma jaringan syaraf tiruan backpropagation untuk memprediksi harga daging ayam di masa mendatang. Dengan menggunakan teknologi ini, kami berharap dapat membantu Anda dalam mengambil keputusan yang lebih baik dalam mengelola bisnis daging ayam Anda.</p>
+		<h2>Tentang Daging Ayam</h2><br>
+		<div class="card card-standard">
+			<img src="{{ url_for('static', filename='daging.jpg') }}" alt="daging" class="card-img-top">
+			<div class="card-body">
+			  <h5 class="card-title">Daging Ayam</h5>
+			</div>
+		  </div>
+		<br><br>
+		<p>Daging ayam adalah salah satu sumber protein hewani yang paling populer di dunia. Selain rasanya yang enak, daging ayam juga mudah diolah dan dapat dijadikan bahan makanan untuk berbagai masakan. Dalam industri peternakan, ayam juga menjadi salah satu hewan ternak yang paling banyak dibudidayakan. Hal ini karena ayam memiliki tingkat pertumbuhan yang cepat dan biaya perawatannya relatif lebih murah dibandingkan dengan hewan ternak lainnya.</p>
+
+		<p>Namun, seperti halnya dengan komoditas lainnya, harga daging ayam juga dipengaruhi oleh berbagai faktor seperti ketersediaan pasokan, permintaan pasar, biaya produksi, dan lain-lain. Oleh karena itu, sangat penting bagi pelaku bisnis daging ayam untuk dapat memprediksi harga daging ayam di masa mendatang agar dapat mengambil keputusan yang tepat dalam mengelola bisnis mereka.</p>
+
+		<br>
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="text-center">
+            <p>Kalau mau memprediksi harga daging ayam per hari, klik tombol di bawah ini:</p>
+            <div class="cta">
+              <a href="/prediksi" class="btn btn-primary btn-lg" style="color: white; ">Prediksi</a>
+              <div class="arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+	
+
+	<!-- Bootstrap JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+{% endblock %}

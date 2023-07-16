@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+	.kodfun-galeri {
+		display: flex;
+		height: 20rem;
+		gap: 1rem;
+	}
+	.kodfun-galeri > div {
+		flex: 1;
+		border-radius: 1rem;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: auto 100%;
+		transition: all .8s cubic-bezier(.25, .4, .45, 1.4);
+	}
+	.kodfun-galeri > div:hover{
+		flex: 5;
+	}
+
+	 /* Social media icons */
+	 .social-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .social-icons a {
+    margin: 0 10px;
+    font-size: 24px;
+    color: #555555;
+    text-decoration: none;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Animation on hover */
+  .social-icons a:hover {
+    transform: translateY(-5px);
+  }
+</style>
+<body>
+	<div class="container-fluid p-0">
+		<!-- About-->
+		<section class="resume-section" id="about">
+		<div class="resume-section-content">
+		<h2 class="mb-0">Tentang Saya</h2>
+		<p>Website ini merupakan sebuah aplikasi yang bertujuan untuk membantu para peternak ayam dan masyarakat umum dalam memprediksi harga daging ayam yang akan datang. Dengan menggunakan metode jaringan syaraf tiruan backpropagation, saya mengumpulkan data harga daging ayam selama beberapa bulan terakhir dan melakukan prediksi harga daging ayam yang akan datang.</p>
+
+		
+		
+
+		<h2 class="mt-5">Kontak Saya</h2>
+		<p>Jika Anda memiliki pertanyaan atau saran mengenai aplikasi ini, silakan hubungi kami melalui email atau telepon:</p>
+		<ul>
+			<li>Email: houtarou880@gmail.com</li>
+			<li>Telepon: +62 123 456 789</li>
+		</ul>
+		<div class="social-icons">
+			<a href="https://web.facebook.com/andre.guss.77"><i class="fab fa-facebook-f"></i></a>
+			<a href="https://twitter.com/houtarou880"><i class="fab fa-twitter"></i></a>
+			<a href="https://www.instagram.com/andre.guss7/"><i class="fab fa-instagram"></i></a>
+		  </div>
+		
+		  <!-- Include the Font Awesome library for icons -->
+		  <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+	</div>
+</section>
+
+	<!-- Bootstrap JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+{% endblock %}

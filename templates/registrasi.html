@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <title>Registrasi</title>
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+    }
+
+    .form-container {
+      max-width: 400px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-container .mb-3 {
+      margin-bottom: 20px;
+    }
+
+    .form-container button[type="submit"] {
+      width: 100%;
+    }
+
+    .form-container .text-start {
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="form-container">
+          <h2>Registrasi</h2>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          {% for category, message in messages %}
+          <!-- alert -->
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+          <form action="{{ url_for('registrasi') }}" method="post">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" autocomplete="off" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" autocomplete="off" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" autocomplete="off" required>
+            </div>
+            <div class="mb-3">
+              <!--<label for="level" class="form-label">Level</label>-->
+              <select class="form-select" name="level" id="level" required>
+                <option value="Pengguna">Pengguna</option>
+                
+                <!--<option value="Admin">Admin</option>-->
+                
+                <!--<option value="Pengguna">Pengguna</option>-->
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Daftar Baru</button>
+            <div class="text-start">Sudah Punya Akun? <a href="{{ url_for('login') }}">Masuk</a></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock %}

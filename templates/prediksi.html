@@ -1,0 +1,376 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* CSS Style for the table */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .button {
+  width: 170px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  text-align: center;
+  color: #000;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-left: 30px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.button-1 {
+  background-color: transparent;
+  border: 3px solid #00d7c3;
+  border-radius: 50px;
+  -webkit-transition: all .15s ease-in-out;
+  transition: all .15s ease-in-out;
+  color: #00d7c3;
+}
+.button-1:hover {
+  box-shadow: 0 0 10px 0 #00d7c3 inset, 0 0 20px 2px #00d7c3;
+  border: 3px solid #00d7c3;
+}
+
+.button-2 {
+  color: #fff;
+  border: 3px solid #C38154;
+  background-image: -webkit-linear-gradient(30deg, #C38154 50%, transparent 50%);
+  background-image: linear-gradient(30deg, #C38154 50%, transparent 50%);
+  background-size: 500px;
+  background-repeat: no-repeat;
+  background-position: 0%;
+  -webkit-transition: background 300ms ease-in-out;
+  transition: background 300ms ease-in-out;
+}
+.button-2:hover {
+  background-position: 100%;
+  color: #C38154;
+}
+
+.button-3 {
+  border: 2px solid #3c73ff;
+  background-color: #3c73ff;
+  border-radius: 20px;
+  color: #fff;
+  transition: .3s;
+}
+.button-3:hover {
+  box-shadow: 8px 8px #99bdff;
+  transition: .3s;
+}
+
+.button-4 {
+  background-color: transparent;
+  border: 3px solid #ff0251;
+  color: #ff0251;
+  transition: .3s;
+}
+.button-4:hover {
+  animation: pulse 1s infinite;
+  transition: .3s;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  70% {
+    transform: scale(.9);
+  }
+    100% {
+    transform: scale(1);
+  }
+}
+
+.button-5 {
+  width: 200px;
+  border-radius: 5px;
+  background-color: #F4F200;
+  background-image: #F4F200;
+  background-image: -moz-linear-gradient(top, #fff 0%, #F4F200 100%); 
+  background-image: -webkit-linear-gradient(top, #fff 0%,#F4F200 100%); 
+  background-image: linear-gradient(to bottom, #fff 0%,#F4F200 100%); 
+  background-size: 300px;
+  background-repeat: no-repeat;
+  background-position: 0%;
+  -webkit-transition: background 300ms ease-in-out;
+  transition: background 300ms ease-in-out;
+}
+.button-5:hover {
+  background-position: -200%;
+  transition: background 300ms ease-in-out;
+}
+  </style>
+<div class="container-fluid p-0">
+  <!-- About-->
+  <section class="resume-section" id="data">
+    <div class="resume-section-content">
+      <div class="text-center">
+      <h2 class="mb-0">Prediksi</h2><br>
+      <p>Proses prediksi dimulai dari memilih jumlah hari lalu prediksi</p>
+      </div>
+      <br><br>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <form id="dataForm">
+              <div class="mb-3">
+                <label for="predictionDays" class="form-label">Pilih Jumlah Hari:</label>
+                <select id="predictionDays" name="predictionDays" class="form-select" required>
+                  <option value="3">3 Hari</option>
+                  <option value="7">7 Hari</option>
+                </select>
+              </div>
+              <!-- START MENU UNTUK LEVEL ADMIN -->
+    {% if session['level'] == 'Admin' : %}
+    <div class="mb-3">
+      <label for="startDate" class="form-label">Tanggal Awal:</label>
+      <input type="date" id="startDate" name="startDate" class="form-control" required>
+    </div>
+    
+    <div class="mb-3">
+      <label for="endDate" class="form-label">Tanggal Akhir:</label>
+      <input type="date" id="endDate" name="endDate" class="form-control" required>
+    </div>
+               <!-- END MENU UNTUK LEVEL ADMIN -->
+    {% endif %}
+    {% if session['level'] == 'Pengguna' : %}
+              <button type="submit" class="btn btn-primary btn-lg" href="/predict" name="predict" style="color: white;">Prediksi</button>
+              {% endif %}
+                      <!-- START MENU UNTUK LEVEL ADMIN -->
+    {% if session['level'] == 'Admin' : %}
+              <button type="submit" class="btn btn-primary btn-lg" href="/he" name="he" style="color: white;">Test</button>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <br><br>
+      <div id="loading" style="display: none;">
+        <div class="text-center">
+          <p>Melakukan prediksi...</p>
+        </div>
+        <div class="loader"></div>
+      </div>
+      
+      <div id="chart"></div>
+      
+      
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+      
+      <script>
+        $(document).ready(function () {
+          $('#dataForm').submit(function (event) {
+            event.preventDefault();
+            var predictionDays = $('#predictionDays').val();
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+        
+            // Menampilkan animasi loading
+            $('#loading').show();
+        
+            $.ajax({
+              url: '/predict',
+              method: 'POST',
+              data: { 
+                predictionDays: predictionDays,
+                startDate: startDate,
+                endDate: endDate
+              },
+              success: function (response) {
+                var predictedData = response.predictedData;
+                var actualData = response.actualData; // Diasumsikan actualData berisi harga aktual dan tanggal
+        
+                var predictedDates = predictedData.map(function (item) {
+                  return item.tanggal;
+                });
+        
+                var predictedPrices = predictedData.map(function (item) {
+                  return item.harga;
+                });
+        
+                var actualDates = actualData.map(function (item) {
+                  return item.tanggal;
+                });
+        
+                var actualPrices = actualData.map(function (item) {
+                  return item.harga;
+                });
+        
+                var predictedTrace = {
+                  x: predictedDates,
+                  y: predictedPrices,
+                  mode: 'lines',
+                  type: 'scatter',
+                  name: 'Prediksi',
+                  line: {
+                    color: 'blue',
+                    width: 2
+                  },
+                  hovertemplate: 'Tanggal: %{x}<br>Harga: %{y}<br>Hari: %{customdata}',
+                  customdata: predictedData.map(function (item) {
+                    return item.hari;
+                  })
+                };
+        
+                var actualTrace = {
+                  x: actualDates,
+                  y: actualPrices,
+                  mode: 'lines',
+                  type: 'scatter',
+                  name: 'Aktual',
+                  line: {
+                    color: 'green',
+                    width: 2
+                  },
+                  hovertemplate: 'Tanggal: %{x}<br>Harga: %{y}'
+                };
+        
+                var data = [predictedTrace, actualTrace];
+        
+                var layout = {
+                  title: 'Prediksi Harga Harian',
+                  xaxis: {
+                    title: 'Tanggal'
+                  },
+                  yaxis: {
+                    title: 'Harga'
+                  }
+                };
+        
+                Plotly.newPlot('chart', data, layout);
+        
+                // Update current prediction table
+                var currentData = '';
+                for (var i = 0; i < predictedData.length; i++) {
+                  var date = predictedData[i].tanggal;
+                  var price = predictedData[i].harga;
+                  var serialNumber = i + 1; // Add serial number
+        
+                  currentData += '<tr><td>' + serialNumber + '</td><td>' + date + '</td><td>' + price + '</td></tr>';
+                }
+                $('#currentData').html(currentData);
+        
+                // Update previous prediction table
+                var previousData = $('#previousData').html(); // Get previous data
+                $('#previousData').html(previousData + currentData); // Append current data to previous data
+        
+                // Show download button
+                $('#downloadButton').show();
+        
+                // Hide loading animation
+                $('#loading').hide();
+        
+                // Display MSE and MAPE
+                var mse = response.mse;
+                var mape = response.mape;
+                $('#mseValue').text(mse);
+                $('#mapeValue').text(mape);
+                $('#mseContainer').show();
+                $('#mapeContainer').show();
+              }
+            });
+          });
+        });
+        </script>
+        
+      
+      <style>
+        .loader {
+          border: 6px solid #f3f3f3;
+          border-top: 6px solid #3498db;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          animation: spin 2s linear infinite;
+          margin: 20px auto;
+        }
+      
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+      
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      </style>
+      
+      <br><br>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="text-center">
+              <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                  <h5 class="card-title" style="color: white; ">Error Prediksi</h5>
+                </div>
+                <div class="card-body">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="alert alert-info" role="alert">
+                          Error (MSE): <span id="mseValue"></span>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="alert alert-info" role="alert">
+                          Error (MAPE): <span id="mapeValue"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <div class="col-md-6">
+            <div class="text-center">
+              <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                  <h5 class="card-title" style="color: white; ">Riwayat Prediksi</h5>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">No.</th>
+                          <th scope="col">Tanggal</th>
+                          <th scope="col">Harga</th>
+                        </tr>
+                      </thead>
+                      <tbody id="currentData">
+                        <!-- Current prediction data will be dynamically added here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </section>
+  </div>
+</body>
+
+    {% endblock %}
